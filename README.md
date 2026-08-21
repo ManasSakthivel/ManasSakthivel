@@ -1,94 +1,57 @@
 # Manas Sakthivel
 
-**Software Engineer · AI/Systems Researcher**
+Hi, I'm Manas — a CS graduate from RV College of Engineering, currently working as a Software Developer at IBM.
 
-B.E. Computer Science, RV College of Engineering (CGPA 8.29/10)  
-Software Developer, IBM Software Labs · Prior: DigiCert
-
----
-
-## Research
-
-I investigate how complex software systems behave, how that behavior can be represented and validated, and how causal and AI-based methods can reason about behavioral changes across software transformations, legacy modernization, and distributed system failures.
-
-**Central questions:**
-
-- Can execution-grounded representations detect semantic changes that structural analysis misses? → [SBG](#sbg)
-- Can behavioral contracts preserve semantic obligations when legacy software is modernized? → [RELIC](#relic)
-- Can controlled interventions improve causal attribution of behavioral divergence in distributed systems? → [RIFT](#rift)
+Most of my recent projects started as engineering questions that gradually turned into something deeper. I got interested in how software actually behaves at runtime — not just what the code says it does, but what it does when executed — and that thread has connected a lot of my work over the past couple of years.
 
 ---
 
-## Research Projects
+## What I'm interested in
 
-### [SBG — Software Behavioral Genome](https://github.com/ManasSakthivel/Software-Behavior-Genome-SBG-Execution-Grounded-Behavioral-Representation)
-
-*Can execution-grounded behavioral representations detect semantic changes in software beyond simple execution-volume shortcuts?*
-
-5 research versions (V1–V5) with pre-registered hypotheses and a frozen test set. 3,777-pair benchmark across 24 transformation types (12 semantics-preserving, 14 semantics-changing).
-
-**Primary finding:** The behavioral genome does not outperform the `exception_fraction` shortcut on the aggregate benchmark (AUROC 0.551 vs 0.593). But on adversarially designed hard-negative pairs — where shortcuts are explicitly defeated — the behavioral representation achieves 12/12 correct vs 5/12 for the shortcut. On 15 real regression pairs, 14/15 detected vs 3/15 by the shortcut, including 9 bugs entirely invisible to exception-based detection.
-
-516 unit tests · 8 adversarial reviews (ICSE/NeurIPS criteria) · Holm-Bonferroni correction · SHA-256 artifact hashes · 42 prior works surveyed  
-**Status:** Research frozen. Target: MSR / ISSTA empirical study track.
-
-### [RELIC — Behavioral Contracts for Legacy Modernization](https://github.com/ManasSakthivel/RELIC)
-
-*Can behavioral contract graphs detect semantic regressions that structural dependency analysis misses?*
-
-Extracts Behavioral Contract Graphs from JCL/COBOL artifacts; identifies behavioral obligations (ordering constraints, return-code guards, dataset dependencies) that become invisible when systems are migrated to cloud-native orchestration. Differencing via confidence-delta detects weakened contracts that structural baselines miss entirely.
-
-On the AWS CardDemo COBOL benchmark: 104/104 violating mutations detected, 0 false positives on 144 semantics-preserving negatives (F1 = 1.000). Outperforms structural, dependency, and LLM baselines.
-
-305 tests · Docker one-command reproduction · Manuscript under review  
-**Scope:** Single application (CardDemo). Results are benchmark-specific, not production-wide claims.
-
-### [RIFT — Intervention-Grounded Causal Diagnosis](https://github.com/ManasSakthivel/RIFT-Intervention-Grounded-Detection-of-Behavioral-Divergence)
-
-*Can controlled runtime interventions improve causal attribution of behavioral divergence in distributed microservice systems?*
-
-Combines FCI/PAG causal discovery from time-series telemetry, do-calculus intervention semantics, Wasserstein W1 divergence measurement, and iterative Bayesian closed-loop graph update. When a hidden confounder makes attribution non-identifiable, RIFT abstains — 100% correct abstention on 24 confounded development scenarios.
-
-624 tests · 14 registered experiments · 8 safety hard-stops · Online Boutique testbed (14 services)  
-**Status:** Implementation complete; live empirical evaluation (H1–H4) pending final Linux execution campaign.
+- Program analysis and software behavior
+- Legacy software and modernization
+- Distributed systems and observability
+- AI-assisted software engineering
+- Systems that have to be reliable
 
 ---
 
-## Engineering
+## Projects
+
+### [Software Behavior Genome (SBG)](https://github.com/ManasSakthivel/Software-Behavior-Genome-SBG-Execution-Grounded-Behavioral-Representation)
+
+I wanted to understand whether you could represent how a program *behaves* at runtime in a structured, comparable form — separate from what the code looks like statically. SBG extracts behavioral features from execution traces (call patterns, state transitions, exception behavior, timing) and uses them to compare two versions of a program. The main finding was nuanced: the representation doesn't consistently beat simpler baselines on the aggregate benchmark, but works better on harder cases where the simple shortcuts fail. I found that more interesting than a clean win.
+
+### [RELIC](https://github.com/ManasSakthivel/RELIC)
+
+Legacy systems like COBOL/JCL encode behavioral rules that aren't written down anywhere — step ordering, return code guards, dataset dependencies. When you modernize the system, those rules often get lost. RELIC tries to make them explicit by extracting behavioral contracts from the code, then checking whether they're preserved after a transformation. Evaluated on the AWS CardDemo COBOL codebase.
+
+### [RIFT](https://github.com/ManasSakthivel/RIFT-Intervention-Grounded-Detection-of-Behavioral-Divergence)
+
+When something goes wrong in a microservice system, standard observability tools tell you what metrics changed together. That's correlation, not cause. RIFT explores whether deliberately perturbing a service — injecting controlled latency — and watching what changes downstream can give better causal signal for root-cause analysis. Implementation is complete; the live empirical evaluation on a real testbed is still in progress.
 
 ### [Electrolyser Telemetry System](https://github.com/ManasSakthivel/Electrolyser-Telemetry)
 
-End-to-end secure IIoT platform for green hydrogen plant monitoring. Physics-based digital twin (Butler-Volmer + Nernst + Ohmic voltage model, Faraday's law, 16 injectable fault modes) feeds real-time telemetry through mTLS/X.509 MQTT → Telegraf → InfluxDB → Grafana → ML fault detection (Isolation Forest, Random Forest, LSTM autoencoder). Zero-trust certificate architecture; full Docker deployment.
+An end-to-end IIoT platform I built for monitoring green hydrogen electrolysers. Physics-based simulation feeds real telemetry through a secured MQTT broker into InfluxDB, visualized in Grafana and a React SCADA interface, with ML-based fault detection on top. Mostly an exercise in building a full system stack from scratch.
 
 ### [Blockchain Medical Federated Learning](https://github.com/ManasSakthivel/Blockchain-Medical-Federated-Learning)
 
-Privacy-preserving federated learning for medical imaging: Gaussian differential privacy (ε,δ budget accounting), additive SMPC gradient aggregation (aggregator never sees raw gradients), Solidity smart contracts for reputation staking and audit trail, GDPR Art. 7/17 consent and erasure. Evaluated on UCI Cleveland Heart Disease dataset. Implementation of accepted journal paper (2024).
+An earlier project exploring privacy-preserving ML in a medical context — federated learning with differential privacy and secure aggregation, with a blockchain layer for audit trail and GDPR consent management. Implementation of a published paper. The interest here was less blockchain-for-its-own-sake and more: what does a privacy-first ML architecture actually look like in practice?
 
 ---
 
-## Research Methodology
+## Work
 
-Every empirical project follows:
+**IBM** — Software Developer. Working on enterprise software, mostly backend systems.
 
-- Pre-registered hypotheses committed to version control before test-set evaluation
-- Frozen test sets — no post-hoc tuning or hypothesis revision
-- Shortcut controls — competing against the simplest possible baselines
-- Holm-Bonferroni multiple comparison correction
-- Comprehensive negative-result documentation — failed hypotheses reported, not hidden
-- Adversarial review before claims are finalized
-- SHA-256 artifact hashing for reproducibility
+**DigiCert** — Previously interned on API automation and software testing.
 
 ---
 
-## Technical Stack
+## Education
 
-**Languages:** Python · Java · COBOL · Solidity · SQL  
-**Systems:** Docker · Linux · tc/netem · InfluxDB · Prometheus · OpenTelemetry · Mosquitto MQTT  
-**ML/AI:** scikit-learn · PyTorch · causal-learn (FCI/PC) · differential privacy · federated learning  
-**Research tools:** pytest · bootstrap CI · Wilcoxon/Mann-Whitney · permutation tests · Holm-Bonferroni
+**RV College of Engineering** — B.E. Computer Science & Engineering
 
 ---
-
-## Contact
 
 [LinkedIn](https://www.linkedin.com/in/manassakthivel) · manas.mskg@gmail.com
