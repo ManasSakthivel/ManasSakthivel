@@ -1,57 +1,96 @@
-# Manas Sakthivel
+<h1 align="center"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.svg">
+  <img alt="Manas Sakthivel, software engineer" src="assets/hero-light.svg" width="600">
+</picture></h1>
 
-Hi, I'm Manas — a CS graduate from RV College of Engineering, currently working as a Software Developer at IBM.
+**A software engineer interested in understanding, analysing and improving complex software systems through rigorous engineering and research.**
 
-Most of my recent projects started as engineering questions that gradually turned into something deeper. I got interested in how software actually behaves at runtime — not just what the code says it does, but what it does when executed — and that thread has connected a lot of my work over the past couple of years.
+My projects share one theme, behaviour: what systems do, and what must be preserved when they change. I report what the evidence supports, including when it says no.
 
----
+Software Developer, IBM Software Labs · B.E. Computer Science and Engineering, RV College of Engineering · [Website](https://manas-sakthivel.vercel.app/) · [LinkedIn](https://www.linkedin.com/in/manassakthivel)
 
-## What I'm interested in
+**Projects:** [SBG](#1-software-behavior-genome-sbg) · [RELIC](#2-relic) · [RIFT](#3-rift) · [Electrolyser Telemetry](#4-electrolyser-telemetry) · [Experience](#experience) · [Education](#education)
 
-- Program analysis and software behavior
-- Legacy software and modernization
-- Distributed systems and observability
-- AI-assisted software engineering
-- Systems that have to be reliable
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="assets/divider-dark.svg"><img alt="" src="assets/divider-light.svg" width="100%"></picture></p>
 
----
+## Technical focus
 
-## Projects
+- **Core engineering:** program analysis, software behaviour, legacy (JCL) change analysis, microservice diagnosis, applied ML
+- **Research interests:** behavioural representations of software, mutation-based evaluation, causal diagnosis, evaluation methodology and honest baselines
+- **Systems and infrastructure:** MQTT with mTLS, InfluxDB, Grafana, Docker Compose, GitHub Actions CI, Online Boutique microservice testbed, Prometheus, Jaeger
+- **Languages and tools:** Python, JavaScript (React, Vite), Solidity, Java (RestAssured, TestNG), scikit-learn, PyTorch, pytest, Flask
 
-### [Software Behavior Genome (SBG)](https://github.com/ManasSakthivel/Software-Behavior-Genome-SBG-Execution-Grounded-Behavioral-Representation)
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="assets/divider-dark.svg"><img alt="" src="assets/divider-light.svg" width="100%"></picture></p>
 
-I wanted to understand whether you could represent how a program *behaves* at runtime in a structured, comparable form — separate from what the code looks like statically. SBG extracts behavioral features from execution traces (call patterns, state transitions, exception behavior, timing) and uses them to compare two versions of a program. The main finding was nuanced: the representation doesn't consistently beat simpler baselines on the aggregate benchmark, but works better on harder cases where the simple shortcuts fail. I found that more interesting than a clean win.
+## Selected research and engineering
 
-### [RELIC](https://github.com/ManasSakthivel/RELIC)
+All research projects below use synthetic or author-generated benchmarks. None is externally validated and none has a published paper.
 
-Legacy systems like COBOL/JCL encode behavioral rules that aren't written down anywhere — step ordering, return code guards, dataset dependencies. When you modernize the system, those rules often get lost. RELIC tries to make them explicit by extracting behavioral contracts from the code, then checking whether they're preserved after a transformation. Evaluated on the AWS CardDemo COBOL codebase.
+### 1. Software Behavior Genome (SBG)
 
-### [RIFT](https://github.com/ManasSakthivel/RIFT-Intervention-Grounded-Detection-of-Behavioral-Divergence)
+Execution-grounded behavioural representation of Python programs, used to score whether a change altered behaviour. [Repository](https://github.com/ManasSakthivel/Software-Behavior-Genome-SBG-Execution-Grounded-Behavioral-Representation) · Paper: none (manuscript in preparation).
 
-When something goes wrong in a microservice system, standard observability tools tell you what metrics changed together. That's correlation, not cause. RIFT explores whether deliberately perturbing a service — injecting controlled latency — and watching what changes downstream can give better causal signal for root-cause analysis. Implementation is complete; the live empirical evaluation on a real testbed is still in progress.
+- **Problem:** can behaviour be represented from execution traces alone, without reading outputs, and compared across program versions?
+- **Built:** a pure-standard-library pipeline over call-graph topology, call-order bigrams, exception structure, temporal patterns and value-state transitions, with a size-aware, preregistered evaluation. The repo also documents withdrawn earlier claims and a protocol leak that was found and fixed.
+- **Claim:** SBG V5 (the fifth feature set) separates behaviour-changing from behaviour-preserving transformations better than edit size.
+- **Evidence:** AUROC 0.897 (95% CI 0.863 to 0.922) vs 0.616 for edit size; 0.875 vs 0.500 with edit size exactly matched. V10 (the tenth, size-aware evaluation round): 19 programs, 638 pairs. AUROC is the chance that a changed pair scores higher than an equivalent one (0.5 is chance).
+- **Limits:** synthetic, author-generated benchmark with programs that are siblings of development programs. Hypothesis H4 (a preregistered test) is a null: SBG adds nothing over edit size plus simple execution statistics (+0.006, CI -0.069 to +0.068). It did not transfer to real bugs (BugsInPy AUROC 0.497, QuixBugs 0.444). An earlier frozen test did not demonstrate the method, which led to the redesign.
+- **Stack:** Python (standard library only), pytest, Make, GitHub Actions.
 
-### [Electrolyser Telemetry System](https://github.com/ManasSakthivel/Electrolyser-Telemetry)
+### 2. RELIC
 
-An end-to-end IIoT platform I built for monitoring green hydrogen electrolysers. Physics-based simulation feeds real telemetry through a secured MQTT broker into InfluxDB, visualized in Grafana and a React SCADA interface, with ML-based fault detection on top. Mostly an exercise in building a full system stack from scratch.
+Static analyser that extracts behavioural contracts (step order, dataset dependencies, return-code guards) from JCL batch jobs and diffs them between job versions. [Repository](https://github.com/ManasSakthivel/RELIC) · Paper: manuscript draft, not peer reviewed.
 
-### [Blockchain Medical Federated Learning](https://github.com/ManasSakthivel/Blockchain-Medical-Federated-Learning)
+- **Problem:** legacy mainframe batch jobs encode behavioural rules that are rarely written down and are easily lost in modernization.
+- **Built:** a contract extractor and differ, evaluated by source-level mutation testing with an author-written JCL execution-semantics oracle.
+- **Claim:** RELIC detects behaviour-changing JCL mutants with no false positives, as measured against the author's own oracle.
+- **Evidence:** on AWS CardDemo (n = 315 mutants): precision 1.000, recall 0.850, F1 0.919 (95% CI 0.88 to 0.95). Pooled over three public corpora (n = 566): F1 0.905.
+- **Limits:** a trivial detector that flags any non-comment text change scores F1 0.943 on the same mutants, beating RELIC; RELIC's advantage is specificity (1.000 vs 0.492) at lower recall. An LLM given both job versions scored higher still on a 383-mutant subsample (F1 0.985 vs 0.908). The evaluated artefacts are JCL files, not COBOL source. Ground truth is an oracle by the same author, never checked against real z/OS. An earlier F1 of 1.000 was circular and is withdrawn.
+- **Stack:** Python 3.11+, pytest, Docker.
 
-An earlier project exploring privacy-preserving ML in a medical context — federated learning with differential privacy and secure aggregation, with a blockchain layer for audit trail and GDPR consent management. Implementation of a published paper. The interest here was less blockchain-for-its-own-sake and more: what does a privacy-first ML architecture actually look like in practice?
+### 3. RIFT
 
----
+Research prototype for microservice root-cause analysis that injects controlled latency and measures downstream change, instead of relying on correlation. [Repository](https://github.com/ManasSakthivel/RIFT-Intervention-Grounded-Detection-of-Behavioral-Divergence) · Paper: none.
 
-## Work
+- **Problem:** observability data shows what changed together, not what caused it.
+- **Built:** FCI/PAG causal discovery (a constraint-based method that infers a causal graph), an identifiability check, cost-aware intervention selection, `tc netem` latency injection on the Online Boutique testbed, Wasserstein divergence and a Bayesian update that attributes or abstains. 664 tests pass (2 protected-material checks unavailable) with 8 safety hard stops.
+- **Claim:** none yet. There is no positive empirical result.
+- **Evidence:** on a synthetic simulator benchmark the best variant (V3) does not beat always-abstain on development/validation data (mean utility -0.338 vs 0), and the improvement over V2 is non-confirmatory.
+- **Limits:** the confirmatory experiment is preregistered but not run. There is no protected held-out validation and no generalisation claim; the legacy held-out file is public in the repo. Linux testbed results are as reported by the author.
+- **Stack:** Python 3.11, causal-learn, scikit-learn, networkx, Docker, Prometheus, Jaeger.
 
-**IBM** — Software Developer. Working on enterprise software, mostly backend systems.
+### 4. Electrolyser Telemetry
 
-**DigiCert** — Previously interned on API automation and software testing.
+Five-layer IIoT platform for monitoring green hydrogen electrolysers. Team project; I am the third of four authors on the draft paper. [Repository](https://github.com/ManasSakthivel/Electrolyser-Telemetry) · Paper: draft only.
 
----
+- **Built:** a physics-based plant simulator (Butler-Volmer, Nernst and ohmic terms, two electrolysers, multiple injectable fault modes), an mTLS MQTT broker, Telegraf into InfluxDB, Grafana and a React SCADA UI, and ML fault detection (Isolation Forest, Random Forest, LSTM autoencoder).
+- **Limits:** all telemetry is simulator output; there is no real hardware or real-deployment data, and I make no performance claim for real electrolysers. Fault labels come from the same simulator that generates the features.
+- **Stack:** Python, Mosquitto, Telegraf, InfluxDB, Grafana, React, Vite, Docker Compose.
+
+<details>
+<summary>Earlier work: Blockchain Medical Federated Learning</summary>
+
+<br>
+
+Student prototype combining a federated-learning simulation on the UCI Cleveland heart-disease data (303 records), Gaussian differential-privacy noise, additive secret sharing, a Flask EHR app and Solidity contracts. [Repository](https://github.com/ManasSakthivel/Blockchain-Medical-Federated-Learning) · Paper: unpublished draft.
+
+- **Limits:** SHA-256 model hashing only; there is no zk-STARK implementation. The contract's consent gate is optional and disabled by default, and the simulation is not connected to the contracts. Not clinical, not production.
+- **Stack:** Python, Flask, Solidity, Truffle, web3.
+
+</details>
+
+<p><picture><source media="(prefers-color-scheme: dark)" srcset="assets/divider-dark.svg"><img alt="" src="assets/divider-light.svg" width="100%"></picture></p>
+
+## Experience
+
+- **Software Developer**, IBM Software Labs · Aug 2026 to present
+- **Software Developer Intern**, IBM Software Labs · Mar 2026 to Aug 2026
+- **Associate Software Engineer Intern**, DigiCert · Aug 2025 to Feb 2026. API automation and software testing.
 
 ## Education
 
-**RV College of Engineering** — B.E. Computer Science & Engineering
+**B.E. Computer Science and Engineering**, RV College of Engineering · 2022 to 2026
 
----
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/footer-dark.svg"><img alt="" src="assets/footer-light.svg" width="100%"></picture>
 
-[LinkedIn](https://www.linkedin.com/in/manassakthivel) · manas.mskg@gmail.com
+Website: [manas-sakthivel.vercel.app](https://manas-sakthivel.vercel.app/) · GitHub: [github.com/ManasSakthivel](https://github.com/ManasSakthivel) · LinkedIn: [linkedin.com/in/manassakthivel](https://www.linkedin.com/in/manassakthivel)
